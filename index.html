@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Yasser Tech Calculator PRO</title>
+
+<style>
+:root{
+  --bg:#1b140d;
+  --btn:#3a2f23;
+  --op:#6b4a1a;
+  --text:#f5e6d3;
+  --equal:#b6d68a;
+  --frame:#8a6e53;
+}
+.light{
+  --bg:#f2f2f2;
+  --btn:#e0e0e0;
+  --op:#ffb74d;
+  --text:#111;
+  --equal:#81c784;
+  --frame:#c2a178;
+}
+
+*{box-sizing:border-box;font-family:Segoe UI, sans-serif;}
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
+  touch-action:none; /* prevent pinch/zoom */
+}
+
+/* Logo Background */
+.logo-bg{
+  position:absolute;
+  width:300px;
+  height:300px;
+  background:url("https://files.catbox.moe/gqx5dp.jpg") center/contain no-repeat;
+  opacity:0.15;
+  animation:spin 40s linear infinite;
+}
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+/* Calculator Frame */
+.calc-frame{
+  border:6px solid var(--frame);
+  border-radius:32px;
+  padding:15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.1) inset;
+  background:linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.1));
+  width:400px;   /* fixed width */
+  height:auto;
+  min-height:600px;
+  max-width:400px;
+  user-select:none;
+}
+
+/* Calculator */
+.calculator{
+  width:100%;
+  background:transparent;
+  position:relative;
+  z-index:2;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.header h2{
+  font-size:18px;
+  opacity:.8;
+}
+.toggle{
+  cursor:pointer;
+  font-size:14px;
+}
+
+.display{
+  width:100%;
+  height:90px;
+  background:rgba(0,0,0,0.25);
+  text-align:right;
+  font-size:36px;
+  padding:10px;
+  border:none;
+  border-radius:16px;
+  color:var(--text);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+}
+
+/* Button Grid */
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin-top:12px;
+}
+
+button{
+  height:65px;
+  border-radius:50%;
+  border:none;
+  font-size:20px;
+  background:var(--btn);
+  color:var(--text);
+  cursor:pointer;
+  transition:.1s;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  touch-action: manipulation; /* prevent zoom/drag */
+}
+button:active{
+  transform:scale(0.95);
+}
+.op{background:var(--op);}
+.equal{
+  background:var(--equal);
+  color:#000;
+}
+.wide{grid-column:span 2;}
+footer{
+  text-align:center;
+  margin-top:8px;
+  font-size:12px;
+  opacity:.6;
+  user-select:none;
+}
+</style>
+</head>
+<body>
+<div class="logo-bg"></div>
+
+<div class="calc-frame">
+  <div class="calculator">
+    <div class="header">
+      <h2>Yasser Tech Calculator PRO</h2>
+      <div class="toggle" onclick="toggleMode()">🌙/☀️</div>
+    </div>
+
+    <input id="display" class="display" readonly value="0">
+
+    <div class="buttons">
+      <button class="op" onclick="press(clearAll)">AC</button>
+      <button class="op" onclick="press(() => append('('))">(</button>
+      <button class="op" onclick="press(() => append(')'))">)</button>
+      <button class="op" onclick="press(() => append('%'))">%</button>
+      <button class="op" onclick="press(() => append('/'))">÷</button>
+
+      <button onclick="press(() => append('7'))">7</button>
+      <button onclick="press(() => append('8'))">8</button>
+      <button onclick="press(() => append('9'))">9</button>
+      <button class="op" onclick="press(() => append('*'))">×</button>
+      <button class="op" onclick="press(sin)">sin</button>
+
+      <button onclick="press(() => append('4'))">4</button>
+      <button onclick="press(() => append('5'))">5</button>
+      <button onclick="press(() => append('6'))">6</button>
+      <button class="op" onclick="press(() => append('-'))">−</button>
+      <button class="op" onclick="press(cos)">cos</button>
+
+      <button onclick="press(() => append('1'))">1</button>
+      <button onclick="press(() => append('2'))">2</button>
+      <button onclick="press(() => append('3'))">3</button>
+      <button class="op" onclick="press(() => append('+'))">+</button>
+      <button class="op" onclick="press(tan)">tan</button>
+
+      <button class="wide" onclick="press(() => append('0'))">0</button>
+      <button onclick="press(() => append('.'))">.</button>
+      <button class="equal" onclick="press(calculate,true)">=</button>
+      <button class="op" onclick="press(log)">log</button>
+      <button class="op" onclick="press(ln)">ln</button>
+
+      <button class="op" onclick="press(pi)">π</button>
+      <button class="op" onclick="press(e)">e</button>
+      <button class="op" onclick="press(() => power())">xʸ</button>
+      <button class="op" onclick="press(sqrt)">√</button>
+      <button class="op" onclick="press(square)">x²</button>
+    </div>
+
+    <footer>© 2026 Yasser Tech Solutions</footer>
+  </div>
+</div>
+
+<!-- Sounds -->
+<audio id="clickSound">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c1f33c2a1.mp3" type="audio/mpeg">
+</audio>
+<audio id="equalSound">
+  <source src="https://cdn.pixabay.com/download/audio/2021/09/21/audio_82f211.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const display=document.getElementById("display");
+const clickSound=document.getElementById("clickSound");
+const equalSound=document.getElementById("equalSound");
+
+function press(fn,isEqual=false){
+  (isEqual?equalSound:clickSound).currentTime=0;
+  (isEqual?equalSound:clickSound).play();
+  fn();
+}
+
+function append(val){ if(display.value==="0") display.value=val; else display.value+=val; }
+function clearAll(){display.value="0";}
+function calculate(){try{display.value=eval(display.value);}catch{display.value="Error";}}
+function sin(){display.value=Math.sin(eval(display.value));}
+function cos(){display.value=Math.cos(eval(display.value));}
+function tan(){display.value=Math.tan(eval(display.value));}
+function log(){display.value=Math.log10(eval(display.value));}
+function ln(){display.value=Math.log(eval(display.value));}
+function sqrt(){display.value=Math.sqrt(eval(display.value));}
+function square(){display.value=Math.pow(eval(display.value),2);}
+function pi(){display.value+=Math.PI;}
+function e(){display.value+=Math.E;}
+function power(){display.value+='**';}
+function toggleMode(){document.body.classList.toggle("light");}
+</script>
+</body>
+  </html>
